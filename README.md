@@ -3,6 +3,9 @@ pytransact aims to simplify payment processing with Bitcoin in python by abstrac
 
 ## Installation
 
+- Ensure Bitcoin Core is installed and the RPC API is set up and enabled.
+- Bitcoin Core can be installed here https://bitcoin.org/en/bitcoin-core/.
+
 ```
 pip install pytransact
 ```
