@@ -17,7 +17,8 @@ async def main():
     btc = bitcoin.BitcoinClient("127.0.0.1", port=8332, rpc_username=username, rpc_password=password)
 
     async with btc.request_payment(10) as request:
-        print(f"Please transfer 10 BTC to {request.address}")
+        print(f"Please transfer {request.quantity} BTC to {request.address}.")
+        print(f"This request will expire at {request.expiration}!")
         result = await request.result()
         if result:
             print("Payment recieved!")

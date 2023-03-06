@@ -1,14 +1,17 @@
-import asyncio
-import time
 from .authproxy import JSONRPCException
+import asyncio
+
+import time
+import datetime
 
 class PaymentRequest:
-    def __init__(self, rpc_connection, btc_quantity, expiration):
+    def __init__(self, rpc_connection, quantity, expiration):
         self._rpc_connection = rpc_connection
-        self._btc_quantity = btc_quantity
         self._expiration = expiration
         self._expiry_time = time.time() + self._expiration
     
+        self.quantity = quantity
+        self.expiration = datetime.datetime.fromtimestamp(self._expiry_time).strftime("%Y-%m-%d %H:%M:%S")
         self.address = None
 
     async def __aenter__(self):
@@ -19,7 +22,7 @@ class PaymentRequest:
         return
 
     def __str__(self):
-        return f"{'Address:':15} {self.address} {'BTC quantity:':15} {self._btc_quantity}\n{'Payment expiry:':15} {self._expiration} seconds\n{'TTL:':15} {self._expiry_time - time.time()} seconds"
+        return f"{'Address:':15} {self.address} {'BTC quantity:':15} {self.quantity}\n{'Payment expiry:':15} {self._expiration} seconds\n{'TTL:':15} {self._expiry_time - time.time()} seconds"
 
     async def result(self):
         while self._expiry_time - time.time() > 0:
@@ -41,9 +44,9 @@ class PaymentRequest:
 
                 total = sum([transaction["amount"] for transaction in incoming_transactions])
 
-                if total >= self._btc_quantity:
+                if total >= self.quantity:
                     return {"status": "success", "address_balance": total}
-                print(f"{total} BTC at address. But not {self._btc_quantity}")
+                print(f"{total} BTC at address. But not {self.quantity}")
 
             except JSONRPCException as e:
                 return {"status": "error", "message": str(e)}
