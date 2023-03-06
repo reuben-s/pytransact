@@ -7,7 +7,7 @@ pytransact aims to simplify payment processing with Bitcoin in python by abstrac
 pip install pytransact
 ```
 
-## Request payment example
+## Payment request example
 
 ```python
 from pytransact import bitcoin
