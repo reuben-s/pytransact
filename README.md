@@ -26,4 +26,4 @@ async def main():
             print("Payment not recieved.")
 ```
 
-Because the exchange rate fluctuates over time, payment request quantities pegged to fiat must expire to prevent spenders from delaying payment in the hope that satoshis will drop in price. With pytransact, a payment request automatically expires after 10 minutes, however this can be customised by setting the default parameter `expiration` to an integer value representing the amount of seconds before expiration.
+Because the exchange rate fluctuates over time, payment request quantities pegged to fiat must expire to prevent spenders from delaying payment in the hope that satoshis will drop in price. With pytransact, a payment request automatically expires after 10 minutes, however this can be customised by setting the default parameter `expiration` in the `request_payment` method to an integer value representing the amount of seconds before expiration.
