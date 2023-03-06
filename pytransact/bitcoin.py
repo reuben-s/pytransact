@@ -18,7 +18,7 @@ class BitcoinClient:
     def __del__(self):
         self._loop.create_task(self.release())
 
-    def payment_request(self, btc_quantity, expiration=600):
+    def request_payment(self, btc_quantity, expiration=600):
         return PaymentRequest(self._rpc_connection, btc_quantity, expiration)
 
     async def release(self):
