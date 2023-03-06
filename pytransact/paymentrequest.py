@@ -75,6 +75,7 @@ class PaymentRequest:
         self, 
         transaction_ids
         ):
+        
         while True:
             for transaction_id in transaction_ids:
                 transaction_info = await self._rpc_connection.gettransaction(transaction_id)
