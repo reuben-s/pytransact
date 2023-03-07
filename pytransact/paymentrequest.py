@@ -61,10 +61,10 @@ class PaymentRequest:
 
                 if total >= self.quantity:
                     log.debug(f"({self.address}) {total} recieved. Awaiting {self.required_confirmations} confirmations on each transaction.")
-                    check_confirmations = await self._check_confirmations({ transaction["txid"]: False for transaction in incoming_transactions})
+                    check_confirmations = await self._check_confirmations([ transaction["txid"] for transaction in incoming_transactions ])
                     return {"status": "success", "address_balance": total}
 
-                log.debug(f"({self.address}) {total} found. {total} < {self.quantity}, not enough funds.")
+                log.debug(f"({self.address}) {total} Incoming. {total} < {self.quantity}, not enough funds.")
 
             except JSONRPCException as e:
                 return {"status": "error", "message": str(e)}
@@ -75,18 +75,21 @@ class PaymentRequest:
         self, 
         transaction_ids
         ):
-        
+
         while True:
+            await asyncio.sleep(5)
+
+            confirmed = True
+
             for transaction_id in transaction_ids:
                 transaction_info = await self._rpc_connection.gettransaction(transaction_id)
                 confirmations = transaction_info["confirmations"]
-                if confirmations > self.required_confirmations:
-                    transaction_ids[transaction_id] = True
-
                 log.debug(f"({transaction_id}) Confirmations: {confirmations}")
-
-            if all(transaction_id for transaction_id in transaction_ids.values()):
+                if confirmations <= self.required_confirmations:
+                    confirmed = False
+                else:
+                    confirmed = True
+            
+            if confirmed:
                 log.debug(f"({self.address}) Payment recieved. Confirmation quota ({self.required_confirmations}) reached!")
                 return
-
-            await asyncio.sleep(5)
