@@ -3,6 +3,8 @@ from .paymentrequest import PaymentRequest
 
 import asyncio
 
+import time
+
 class BitcoinClient:
     def __init__(
         self, 
@@ -12,11 +14,15 @@ class BitcoinClient:
         rpc_password
         ):
 
-        self._loop = asyncio.get_running_loop()
         service_url = f"http://{rpc_username}:{rpc_password}@{base_url}:{port}"
         self._rpc_connection = AuthServiceProxy(service_url=service_url)
 
-    async def __aenter__(self):
+        self._loop = asyncio.get_running_loop()
+
+    async def __aenter__(
+        self
+        ):
+
         return self
 
     async def __aexit__(
@@ -28,7 +34,9 @@ class BitcoinClient:
 
         await self.release()
 
-    def __del__(self):
+    def __del__(
+        self
+        ):
         self._loop.create_task(self.release())
 
     def request_payment(
@@ -38,9 +46,18 @@ class BitcoinClient:
         confirmations=6
         ):
 
-        return PaymentRequest(self._rpc_connection, btc_quantity, expiration, confirmations)
+        new_payment_request = PaymentRequest(
+            self._rpc_connection,
+            btc_quantity, 
+            expiration, 
+            confirmations
+        )
+        return new_payment_request
 
-    async def release(self):
+    async def release(
+        self
+        ):
+
         if self._rpc_connection:
             await self._rpc_connection.close()
             self._rpc_connection = None
