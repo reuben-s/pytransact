@@ -19,20 +19,21 @@ pip install pytransact
 ## Payment request example
 
 ```python
-from pytransact import bitcoin
 import asyncio
+
+from pytransact import bitcoin
 
 async def main():
     btc = bitcoin.BitcoinClient("127.0.0.1", port=8332, rpc_username=username, rpc_password=password)
 
     async with btc.request_payment(10) as request:
-        print(f"Please transfer {request.quantity} BTC to {request.address}.")
+        print(f"Please transfer {request.required_balance} BTC to {request.address}.")
         print(f"This request will expire at {request.expiration}!")
         result = await request.result()
-        if result:
-            print("Payment recieved!")
+        if result.successful:
+            print(result.message)
         else:
-            print("Payment not recieved.")
+            print(result.message)
 
 loop = asyncio.get_event_loop()
 loop.run_until_complete(main())
@@ -43,9 +44,10 @@ Because the exchange rate fluctuates over time, payment request quantities pegge
 ## Logging transaction details
 
 ```python
-from pytransact import bitcoin
 import asyncio
 import logging
+
+from pytransact import bitcoin
 
 logging.basicConfig()
 logger = logging.getLogger("pytransact").setLevel(logging.DEBUG)
