@@ -48,7 +48,7 @@ Other `request_payment` default parameters:
 
 ### Payment forwarding
 
-Useful for payment situations where for example you want to automatically take a fee from an item sold using your product.
+Payment forwarding automates the deduction of fees from payments, making it useful for product sales and simplifying payment processing.
 
 ```python
 import asyncio
