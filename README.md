@@ -22,7 +22,6 @@ pip install pytransact
 
 ```python
 import asyncio
-
 import pytransact
 
 async def main():
@@ -53,7 +52,6 @@ Useful for payment situations where for example you want to automatically take a
 
 ```python
 import asyncio
-
 import pytransact
 
 async def main():
@@ -82,7 +80,6 @@ Note: Either `percentage` or `btc_quantity` must be set, however they cannot bot
 ```python
 import asyncio
 import logging
-
 import pytransact
 
 logging.basicConfig()
