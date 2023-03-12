@@ -16,7 +16,7 @@ class PaymentResult:
         successful: Optional[bool] = True
         ) -> None:
         self.address = address
-        self.successful: bool = successful
+        self.successful: Optional[bool] = successful
         self.message: str = message
 
         log.debug(f"({self.address}) {self.message}")
@@ -27,7 +27,8 @@ class PaymentRequest:
         rpc_connection: AuthServiceProxy,
         required_balance: int, 
         expiration: int, 
-        confirmations: int
+        confirmations: int,
+        forward: ForwardPayment
         ) -> None:
         self._rpc_connection: AuthServiceProxy = rpc_connection
 
@@ -38,6 +39,8 @@ class PaymentRequest:
         self.expiration: str = datetime.datetime.fromtimestamp(self._expiry_time).strftime("%Y-%m-%d %H:%M:%S")
         self.address: str = None
         self.required_confirmations: int = confirmations
+
+        self._forward = forward
 
     async def __aenter__(self) -> PaymentRequest:
         await self._generate_new_address()
@@ -63,6 +66,13 @@ class PaymentRequest:
         while time.time() < self._expiry_time:
             balance: Decimal = await self._rpc_connection.getreceivedbyaddress(self.address, self.required_confirmations)
             if balance >= self.required_balance:
+                if self._forward:
+                    await self._forward._forward_payment(
+                        self._rpc_connection, 
+                        balance, 
+                        self.required_balance
+                        )
+
                 return PaymentResult(
                     self.address,
                     f"Payment of {self.required_balance} BTC was recieved at address {self.address}"

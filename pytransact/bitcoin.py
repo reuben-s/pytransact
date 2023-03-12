@@ -38,13 +38,15 @@ class BitcoinClient:
         self, 
         btc_quantity: int, 
         expiration: Optional[int] = 600, 
-        confirmations: Optional[int] = 6
+        confirmations: Optional[int] = 6,
+        forward: Optional[ForwardPayment] = None
         ) -> PaymentRequest:
         new_payment_request: PaymentRequest = PaymentRequest(
             self._rpc_connection,
             btc_quantity, 
             expiration, 
-            confirmations
+            confirmations,
+            forward
         )
         return new_payment_request
 
