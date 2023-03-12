@@ -59,7 +59,7 @@ import pytransact
 async def main():
     btc = pytransact.BitcoinClient("127.0.0.1", port=8332, rpc_username=username, rpc_password=password)
 
-    f = pytransact.ForwardPayment("Forward address", percentage=4)
+    f = pytransact.ForwardPayment("BTC Address", percentage=4)
     async with btc.request_payment(10, forward=f) as request:
         result = await request.result()
         if result.successful:
