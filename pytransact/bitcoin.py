@@ -1,8 +1,13 @@
 from __future__ import annotations
 
-import asyncio
+from asyncio import (
+    AbstractEventLoop,
+    get_running_loop
+)
 import time
-from typing import Optional
+from typing import (
+    Optional
+)
 
 from .authproxy import AuthServiceProxy
 from .paymentrequest import PaymentRequest
@@ -18,7 +23,7 @@ class BitcoinClient:
         ) -> None:
         service_url: str = f"http://{rpc_username}:{rpc_password}@{base_url}:{port}"
         self._rpc_connection: AuthServiceProxy = AuthServiceProxy(service_url = service_url)
-        self._loop: AbstractEventLoop = asyncio.get_running_loop()
+        self._loop: AbstractEventLoop = get_running_loop()
 
     async def __aenter__(self) -> BitcoinClient:
         return self

@@ -40,9 +40,9 @@ loop = asyncio.get_event_loop()
 loop.run_until_complete(main())
 ```
 
-Because the exchange rate fluctuates over time, payment request quantities pegged to fiat must expire to prevent spenders from delaying payment in the hope that satoshis will drop in price. With pytransact, a payment request automatically expires after 10 minutes, however this can be customised by setting the default parameter `expiration` in the `request_payment` method to an integer value representing the amount of seconds before expiration.
+Because the exchange rate fluctuates over time, payment request quantities pegged to fiat must expire to prevent spenders from delaying payment in the hope that satoshis will drop in price. With pytransact, a payment request automatically expires after 10 minutes, however this can be customised by setting the `expiration` argument in the `request_payment` method to an integer value representing the amount of seconds before expiration.
 
-Other `request_payment` default parameters:
+Other `request_payment` arguments:
 - `confirmations` Integer value of number of confirmations required before payment request is accepted.
 - `forward` Takes `ForwardPayment` object.
 
@@ -68,7 +68,7 @@ async def main():
 loop = asyncio.get_event_loop()
 loop.run_until_complete(main())
 ```
-`ForwardPayment` parameters:
+`ForwardPayment` arguments:
 - `address` BTC Address of where funds will be forwarded to.
 - `percentage` Percentage of payment request which will be forwarded.
 - `btc_quantity` Quantity of Bitcoin to be forwarded.
