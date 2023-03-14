@@ -75,6 +75,28 @@ loop.run_until_complete(main())
 
 Note: Either `percentage` or `btc_quantity` must be set, however they cannot both be set at the same time.
 
+### Refunds
+
+You can refund payments by passing a return address into the `refund` method of the `PaymentResult` class.
+```python
+import asyncio
+import pytransact
+
+async def main():
+    btc = pytransact.BitcoinClient("127.0.0.1", port=8332, rpc_username=username, rpc_password=password)
+
+    f = pytransact.ForwardPayment("BTC Address", percentage=4)
+    async with btc.request_payment(10, forward=f) as request:
+        result = await request.result()
+        tx_id = await result.refund("Return address")
+
+loop = asyncio.get_event_loop()
+loop.run_until_complete(main())
+```
+`refund` arguments:
+- `address` Refund return address
+- `confirmations` Number of blocks before transaction included in blockchain (Note: the lower the blocks, the higher the transaction fee).
+
 ### Logging transaction details
 
 ```python

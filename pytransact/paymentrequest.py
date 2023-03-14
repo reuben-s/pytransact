@@ -46,10 +46,6 @@ class PaymentResult:
         if not self.successful:
             raise ValueError("Cannot give refund as the payment request was not successful!")
 
-        # fee: dict[str, Any] = await self._rpc_connection.estimatesmartfee(confirmations)
-        fee: decimal.Decimal() = 0.00001597
-        change_address: str = await self._rpc_connection.getnewaddress()
-
         txid = await self._rpc_connection.sendtoaddress(refund_address, self.requested_quantity, "", "", True, False, confirmations)
 
         return txid
