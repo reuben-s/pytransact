@@ -24,16 +24,22 @@ class ForwardPayment:
         self, 
         rpc_connection: AuthServiceProxy,
         balance: int,
-        initial_quantity: int
-        ) -> bool:
+        initial_quantity: int,
+        confirmations: int = 6
+        ) -> str:
         forward_quantity: int = initial_quantity * self.percentage if self.percentage else self.btc_quantity
 
         if forward_quantity > balance:
             raise ValueError(f"Insufficient funds to forward {self.btc_quantity} to {self.address}")
 
-        result: str = await rpc_connection.sendtoaddress(
-            self.address,
-            forward_quantity
-        )
+        txid: str = await rpc_connection.sendtoaddress(
+            self.address, 
+            forward_quantity, 
+            "", 
+            "", 
+            True, 
+            False, 
+            confirmations
+            )
 
-        return result
+        return txid

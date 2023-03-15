@@ -42,11 +42,19 @@ class PaymentResult:
         self,
         refund_address: str,
         confirmations: Optional[int] = 6
-        ) -> Any:
+        ) -> str:
         if not self.successful:
             raise ValueError("Cannot give refund as the payment request was not successful!")
 
-        txid = await self._rpc_connection.sendtoaddress(refund_address, self.requested_quantity, "", "", True, False, confirmations)
+        txid: str = await self._rpc_connection.sendtoaddress(
+            refund_address, 
+            self.requested_quantity, 
+            "", 
+            "", 
+            True, 
+            False, 
+            confirmations
+            )
 
         return txid
 
