@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from decimal import Decimal
+from .util import to_satoshi
 
 class ForwardPayment:
     def __init__(
@@ -34,12 +34,9 @@ class ForwardPayment:
         if forward_quantity > balance:
             raise ValueError(f"Insufficient funds to forward {self.btc_quantity} to {self.address}")
 
-        number: Decimal = Decimal(forward_quantity)
-        rounded_down_number: Decimal = number.quantize(Decimal('0.00000001'), rounding='ROUND_DOWN')
-
         txid: str = await rpc_connection.sendtoaddress(
             self.address, 
-            float(rounded_down_number), 
+            float(to_satoshi(forward_quantity)), 
             "", 
             "", 
             True, 
