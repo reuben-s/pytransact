@@ -11,7 +11,7 @@ from typing import (
     Dict,
     Any
 )
-import decimal
+from decimal import Decimal
 
 from .authproxy import AuthServiceProxy
 from .forwardpayment import ForwardPayment
@@ -46,9 +46,12 @@ class PaymentResult:
         if not self.successful:
             raise ValueError("Cannot give refund as the payment request was not successful!")
 
+        number: Decimal = Decimal(self.requested_quantity)
+        rounded_down_number: Decimal = number.quantize(Decimal('0.00000001'), rounding='ROUND_DOWN')
+
         txid: str = await self._rpc_connection.sendtoaddress(
             refund_address, 
-            self.requested_quantity, 
+            float(rounded_down_number), 
             "", 
             "", 
             True, 

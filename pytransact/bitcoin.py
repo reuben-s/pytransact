@@ -1,10 +1,12 @@
 from __future__ import annotations
 
+
+import time
+from decimal import getcontext
 from asyncio import (
     AbstractEventLoop,
     get_running_loop
 )
-import time
 from typing import (
     Optional
 )
@@ -21,6 +23,7 @@ class BitcoinClient:
         rpc_username: str, 
         rpc_password: str
         ) -> None:
+        getcontext().prec = 8
         service_url: str = f"http://{rpc_username}:{rpc_password}@{base_url}:{port}"
         self._rpc_connection: AuthServiceProxy = AuthServiceProxy(service_url = service_url)
         self._loop: AbstractEventLoop = get_running_loop()
